@@ -8,13 +8,14 @@ import java.util.*;
 
 public class main {
 
-    public static Map<String, List<String >> records = new HashMap<String, List<String >>();
+    public static Map<String, List<Double>> records = new HashMap<String, List<Double >>();
 
     public static void csvToList() {
-        try (CSVReader csvReader = new CSVReader(new FileReader("D:\\csvToBestRoutePrice\\src\\dane.csv"));) {
-            String[] list = null;
+        try (CSVReader csvReader = new CSVReader(new FileReader("D:\\csvToBestRoutePrice\\src\\dane.csv"))) {
+            String[] list;
             while ((list = csvReader.readNext()) != null) {
-                String msg[] = list[1].split(" ");
+                double newNum = 0;
+                String[] msg = list[1].split(" ");
                 String new_str = "";
 
                 for (String words : msg) {
@@ -23,20 +24,18 @@ public class main {
                         new_str = new_str.replace(",",".");
                         new_str = new_str.replace(" ","");
                         try {
-                            double d = Double.parseDouble(new_str);
+                            newNum = Double.parseDouble(new_str);
                         } catch (NumberFormatException e) {
-                            System.out.println(e);
                         }
-
                     }
                 }
                 if (records.containsKey(list[0])) {
 
-                    records.get(list[0]).add(new_str);
+                    records.get(list[0]).add(newNum);
                 } else {
-                    List<String > value = new ArrayList<>();
+                    List<Double> value = new ArrayList<>();
 
-                    value.add(new_str);
+                    value.add(newNum);
                     records.put(list[0], value);
                     }
                 }
@@ -48,19 +47,16 @@ public class main {
 
 
         public static void main(String[] args) {
-        int[] prices = {150,146,152,157,160,163,155,150,147,151};
+        //int[] prices = {150,146,152,157,160,163,155,150,147,151};
 
         csvToList();
 
-        Object[] bankPolnocny = records.get("Bank Północny").toArray();
-
-        //Object[] bankPolnocny = records.get("Bank Północny").toArray();
-        System.out.println(records);
+        double[] prices = records.get("Bank Północny").stream().mapToDouble(Double::doubleValue).toArray();
 
         int i=0;
-        int peak=prices[0];
-        int valley=prices[0];
-        int maxProfit=0;
+        double peak=prices[0];
+        double valley=prices[0];
+        double maxProfit=0;
         while(i<prices.length-1)
         {
             while(i<prices.length-1 && prices[i]>=prices[i+1])
