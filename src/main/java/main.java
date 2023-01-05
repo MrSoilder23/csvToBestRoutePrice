@@ -21,17 +21,18 @@ public class main {
                 for (String words : msg) {
                     if (!words.equals("zł")) {
                         new_str += words + " ";
-                        new_str = new_str.replace(",",".");
-                        new_str = new_str.replace(" ","");
+                        new_str = new_str.replace(",", ".");
+                        new_str = new_str.replace(" ", "");
                         try {
                             newNum = Double.parseDouble(new_str);
                         } catch (NumberFormatException e) {
                         }
+
                     }
                 }
                 if (records.containsKey(list[0])) {
-
-                    records.get(list[0]).add(newNum);
+                    if (!new_str.isEmpty() || !new_str.isBlank())
+                        records.get(list[0]).add(newNum);
                 } else {
                     List<Double> value = new ArrayList<>();
 
@@ -46,33 +47,47 @@ public class main {
     }
 
 
-        public static void main(String[] args) {
-        //int[] prices = {150,146,152,157,160,163,155,150,147,151};
+    public static void main(String[] args) {
+        //double[] prices = {150,146,152,157,160,163,155,150,147,151};
 
         csvToList();
 
-        double[] prices = records.get("Bank Północny").stream().mapToDouble(Double::doubleValue).toArray();
+        //double[] prices = records.get("Bank Północny").stream().mapToDouble(Double::doubleValue).toArray();
 
-        int i=0;
-        double peak=prices[0];
-        double valley=prices[0];
-        double maxProfit=0;
-        while(i<prices.length-1)
-        {
-            while(i<prices.length-1 && prices[i]>=prices[i+1])
-                i++;
-            valley=prices[i];
-            int sturn = i+1;
-            System.out.println(valley + " Buy on turn: " + sturn);
-            while(i<prices.length-1 && prices[i+1]>=prices[i])
-                i++;//post fix use
-            peak=prices[i];
-            int bturn = i+1;
-            System.out.println(peak + " Sell on turn: " + bturn);
-            maxProfit+=peak-valley;
-        }
+        //double[] prices = null;
 
-        System.out.println(maxProfit);
+       Collection<List<Double>> DoubleCollection = records.values();
+       Collection<String> StringCollection = records.keySet();
+
+       Iterator<List<Double>> DoubleIterator = DoubleCollection.iterator();
+       Iterator<String> StringIterator = StringCollection.iterator();
+
+       while (DoubleIterator.hasNext()) {
+           List<Double> doubleList = DoubleIterator.next();
+           double[] prices = doubleList.stream().mapToDouble(d -> d).toArray();
+           //System.out.println(Arrays.toString(prices));
+           System.out.println(StringIterator.next());
+
+           int i = 0;
+           double peak = prices[0];
+           double valley = prices[0];
+           double maxProfit = 0;
+           while (i < prices.length - 1) {
+               while (i < prices.length - 1 && prices[i] >= prices[i + 1])
+                   i++;
+               valley = prices[i];
+               int sturn = i + 1;
+               System.out.println(valley + " Buy on turn: " + sturn);
+               while (i < prices.length - 1 && prices[i + 1] >= prices[i])
+                   i++;//post fix use
+               peak = prices[i];
+               int bturn = i + 1;
+               System.out.println(peak + " Sell on turn: " + bturn);
+               maxProfit += peak - valley;
+           }
+
+           System.out.println(maxProfit);
+       }
     }
 
 }
