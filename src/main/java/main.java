@@ -8,7 +8,7 @@ import java.util.*;
 
 public class main {
 
-    public static Map<String, List<Double>> records = new HashMap<String, List<Double >>();
+    public static Map<String, List<Double>> records = new HashMap<>();
 
     public static void csvToList() {
         try (CSVReader csvReader = new CSVReader(new FileReader("D:\\csvToBestRoutePrice\\src\\dane.csv"))) {
@@ -48,13 +48,9 @@ public class main {
 
 
     public static void main(String[] args) {
-        //double[] prices = {150,146,152,157,160,163,155,150,147,151};
+        //double[] prices = {150,146,152,157,160,163,155,150,147,151}; //Test Value
 
         csvToList();
-
-        //double[] prices = records.get("Bank Północny").stream().mapToDouble(Double::doubleValue).toArray();
-
-        //double[] prices = null;
 
        Collection<List<Double>> DoubleCollection = records.values();
        Collection<String> StringCollection = records.keySet();
