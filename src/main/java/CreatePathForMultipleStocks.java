@@ -49,41 +49,14 @@ public class CreatePathForMultipleStocks {
         int n = prices[0].length;
         int m = prices.length;
         double[][] dp = new double[k+1][n];
-        int[][] buy = new int[k+1][n];
-        int[][] sell = new int[k+1][n];
         for (int i = 1; i <= k; i++) {
             double maxDiff = -prices[0][0];
             for (int j = 1; j < n; j++) {
                 for (int p = 0; p < m; p++) {
                     maxDiff = Math.max(maxDiff, dp[i-1][j] - prices[p][j]);
-                    if (prices[p][j] + maxDiff > dp[i][j-1]) {
-                        dp[i][j] = prices[p][j] + maxDiff;
-                        buy[i][j] = p;
-                        sell[i][j] = j;
-                    } else {
-                        dp[i][j] = dp[i][j-1];
-                        buy[i][j] = buy[i][j-1];
-                        sell[i][j] = sell[i][j-1];
-                    }
+                    dp[i][j] = Math.max(dp[i][j-1], prices[p][j] + maxDiff);
                 }
             }
-        }
-        int i = k;
-        int j = n-1;
-        while (i > 0 && j > 0) {
-            if (buy[i][j] != buy[i][j-1]) {
-                System.out.println("Buy Stock " + (buy[i][j] + 1) + " at day " + sell[i][j]);
-                i--;
-            }
-            j--;
-        }
-        j = n-1;
-        while (i > 0 && j > 0) {
-            if (sell[i][j] != sell[i][j-1]) {
-                System.out.println("Sell Stock " + (buy[i][j] + 1) + " at day " + sell[i][j]);
-                i--;
-            }
-            j--;
         }
         return dp[k][n-1];
     }
