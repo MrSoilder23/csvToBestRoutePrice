@@ -6,7 +6,7 @@ import java.io.*;
 
 import java.util.*;
 
-public class main {
+public class CreatePathForEveryStock {
 
     public static Map<String, List<Double>> records = new HashMap<>();
 
@@ -27,7 +27,6 @@ public class main {
                             newNum = Double.parseDouble(new_str);
                         } catch (NumberFormatException e) {
                         }
-
                     }
                 }
                 if (records.containsKey(list[0])) {
@@ -40,7 +39,6 @@ public class main {
                     records.put(list[0], value);
                     }
                 }
-
         } catch (CsvValidationException | IOException e) {
             e.printStackTrace();
         }
@@ -52,8 +50,8 @@ public class main {
 
         csvToList();
 
-       Collection<List<Double>> DoubleCollection = records.values();
-       Collection<String> StringCollection = records.keySet();
+        Collection<List<Double>> DoubleCollection = records.values();
+        Collection<String> StringCollection = records.keySet();
 
        Iterator<List<Double>> DoubleIterator = DoubleCollection.iterator();
        Iterator<String> StringIterator = StringCollection.iterator();
@@ -68,6 +66,7 @@ public class main {
            double peak = prices[0];
            double valley = prices[0];
            double maxProfit = 0;
+           double profit = 0;
            while (i < prices.length - 1) {
                while (i < prices.length - 1 && prices[i] >= prices[i + 1])
                    i++;
@@ -78,10 +77,10 @@ public class main {
                    i++;//post fix use
                peak = prices[i];
                int bturn = i + 1;
-               System.out.println(peak + " Sell on turn: " + bturn);
                maxProfit += peak - valley;
+               profit = peak - valley;
+               System.out.println(peak + " Sell on turn: " + bturn + " Profit: " + profit);
            }
-
            System.out.println(maxProfit);
        }
     }
