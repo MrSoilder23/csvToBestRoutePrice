@@ -58,9 +58,11 @@ public class CreatePathForEveryStock {
 
        while (DoubleIterator.hasNext()) {
            List<Double> doubleList = DoubleIterator.next();
-           double[] prices = doubleList.stream().mapToDouble(d -> d).toArray();
+           double[] a = doubleList.stream().mapToDouble(d -> d).toArray();
            //System.out.println(Arrays.toString(prices));
            System.out.println(StringIterator.next());
+
+           double[] prices = {1, 4, 1, 2, 3, 3, 7};
 
            int i = 0;
            double peak = prices[0];

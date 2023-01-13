@@ -45,22 +45,89 @@ public class CreatePathForMultipleStocks {
         }
     }
 
-    public static double maxProfit(double[][] prices, int k) {
-        int n = prices[0].length;
-        int m = prices.length;
-        double[][] dp = new double[k+1][n];
-        for (int i = 1; i <= k; i++) {
-            double maxDiff = -prices[0][0];
-            for (int j = 1; j < n; j++) {
-                for (int p = 0; p < m; p++) {
-                    maxDiff = Math.max(maxDiff, dp[i-1][j] - prices[p][j]);
-                    dp[i][j] = Math.max(dp[i][j-1], prices[p][j] + maxDiff);
+    public static double maxProfit(double[][] S, int k) {
+        double profit = 0.0;
+        int turn = 0;
+        while (turn < k) {
+            double localProfit = 0.0;
+            for (int i = 0; i < S.length; i++) {
+                double buyPrice = Double.MAX_VALUE;
+                int buyTime = -1;
+                int sellTime = -1;
+                for (int j = 0; j < S[i].length; j++) {
+                    if (S[i][j] < buyPrice) {
+                        buyPrice = S[i][j];
+                        buyTime = j;
+                    }
+                    if (S[i][j] - buyPrice > localProfit) {
+                        localProfit = S[i][j] - buyPrice;
+                        sellTime = j;
+                    }
+                }
+                if (localProfit > 0) {
+                    System.out.println("Stock " + i + ": Bought at time " + buyTime + " for $" + buyPrice + ", Sold at time " + sellTime + " for $" + S[i][sellTime] + ", Profit: $" + localProfit);
+                    profit += localProfit;
+                    localProfit = 0.0;
                 }
             }
+            turn++;
         }
-        return dp[k][n-1];
+        return profit;
     }
 
+    public static void profit(double[][] prices) {
+        int m = 0;
+        double[][] profitMap = new double[prices.length][prices[0].length];
+        while (m < prices.length) {
+            int i = 0;
+            double peak = prices[0][0];
+            double valley = prices[0][0];
+            double maxProfit = 0;
+            double profit = 0;
+            while (i < prices[0].length - 1) {
+                //VALLEY
+                while (i < prices[0].length - 1 && prices[m][i] >= prices[m][i + 1])
+                    i++;
+
+                valley = prices[m][i];
+                int turn = i + 1;
+                System.out.println(valley + " Buy on turn: " + turn);
+
+                //PEAK
+                while (i < prices[0].length - 1 && prices[m][i + 1] >= prices[m][i])
+                    i++;
+
+                peak = prices[m][i];
+                int bturn = i + 1;
+                maxProfit += peak - valley;
+                profit = peak - valley;
+                profitMap[m][i] = profit;
+
+                System.out.println(peak + " Sell on turn: " + bturn + " Profit: " + profit);
+            }
+            System.out.println(maxProfit);
+            m++;
+            System.out.println(Arrays.deepToString(profitMap));
+        }
+    }
+
+    public static void peak(double[][] p) {
+        double[][] peaks = new double[p.length][p[0].length];
+        for (int i = 0; i < p.length; i++) {
+            for (int j = 1; j < p[0].length-1; j++) {
+                if (p[i][j] > p[i][j+1] && p[i][j] > p[i][j-1]) {
+                    peaks[i][j] = p[i][j];
+                    System.out.println(p[i][j]);
+
+                } else if (p[i][j+1] > p[i][j] & p[i][j+1] > p[i][j]) {
+                    peaks[i][j+1] = p[i][j+1];
+                    System.out.println(p[i][j+1]);
+                }
+            }
+            System.out.println("NEW STOCK");
+        }
+        System.out.println(Arrays.deepToString(peaks));
+    }
 
     public static void main(String[] args) {
 
@@ -79,19 +146,25 @@ public class CreatePathForMultipleStocks {
 
         List<List<Double>> lists = new ArrayList<>(collection);
 
-        System.out.println(lists);
+        //System.out.println(lists);
 
         double[][] arr = lists.stream()
                 .map(l -> l.stream().mapToDouble(Double::doubleValue).toArray())
                 .toArray(double[][]::new);
 
-        System.out.println(Arrays.deepToString(arr));
+        //System.out.println(Arrays.deepToString(arr));
+
+        double[][] a = {{1, 4, 1, 2, 3, 3, 7}, {2, 2, 2, 1, 7, 4, 5}};
+
+        double[] p = {1, 4, 1, 2, 3, 3, 7};
 
         System.out.println(records);
 
-        double[][] answer = {{1.5,1.1,1.2,5.5,1.6,4.1}, {1.2,2.5,3.2,6.4,6.5,7.1}};
+        //profit(a);
 
-        System.out.println(maxProfit(answer, 2));
+        peak(a);
+
+        //System.out.println(maxProfit(arr, 1));
     }
 
 }
