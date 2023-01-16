@@ -46,72 +46,6 @@ public class CreatePathForMultipleStocks {
         }
     }
 
-    public static double maxProfit(double[][] S, int k) {
-        double profit = 0.0;
-        int turn = 0;
-        while (turn < k) {
-            double localProfit = 0.0;
-            for (int i = 0; i < S.length; i++) {
-                double buyPrice = Double.MAX_VALUE;
-                int buyTime = -1;
-                int sellTime = -1;
-                for (int j = 0; j < S[i].length; j++) {
-                    if (S[i][j] < buyPrice) {
-                        buyPrice = S[i][j];
-                        buyTime = j;
-                    }
-                    if (S[i][j] - buyPrice > localProfit) {
-                        localProfit = S[i][j] - buyPrice;
-                        sellTime = j;
-                    }
-                }
-                if (localProfit > 0) {
-                    System.out.println("Stock " + i + ": Bought at time " + buyTime + " for $" + buyPrice + ", Sold at time " + sellTime + " for $" + S[i][sellTime] + ", Profit: $" + localProfit);
-                    profit += localProfit;
-                    localProfit = 0.0;
-                }
-            }
-            turn++;
-        }
-        return profit;
-    }
-
-    public static void profit(double[][] prices) {
-        int m = 0;
-        double[][] profitMap = new double[prices.length][prices[0].length];
-        while (m < prices.length) {
-            int i = 0;
-            double peak = prices[0][0];
-            double valley = prices[0][0];
-            double maxProfit = 0;
-            double profit = 0;
-            while (i < prices[0].length - 1) {
-                //VALLEY
-                while (i < prices[0].length - 1 && prices[m][i] >= prices[m][i + 1])
-                    i++;
-
-                valley = prices[m][i];
-                int turn = i + 1;
-                System.out.println(valley + " Buy on turn: " + turn);
-
-                //PEAK
-                while (i < prices[0].length - 1 && prices[m][i + 1] >= prices[m][i])
-                    i++;
-
-                peak = prices[m][i];
-                int bturn = i + 1;
-                maxProfit += peak - valley;
-                profit = peak - valley;
-                profitMap[m][i] = profit;
-
-                System.out.println(peak + " Sell on turn: " + bturn + " Profit: " + profit);
-            }
-            System.out.println(maxProfit);
-            m++;
-            System.out.println(Arrays.deepToString(profitMap));
-        }
-    }
-
     public static void peak(double[][] p) {
         peaks = new double[p.length][p[0].length];
         for (int i = 0; i < p.length; i++) {
@@ -134,7 +68,7 @@ public class CreatePathForMultipleStocks {
             }
             //System.out.println("NEW STOCK");
         }
-        System.out.println(Arrays.deepToString(peaks));
+        //System.out.println(Arrays.deepToString(peaks));
     }
 
     public static int[][] turns;
@@ -148,27 +82,27 @@ public class CreatePathForMultipleStocks {
             int a = 0;
             for (int j = 0; j < peaks[0].length; j++) {
                 if (peaks[i][j] != 0.0) {
-                    System.out.println(peaks[i][j]);
-                    System.out.println(j);
+                    //System.out.println(peaks[i][j]);
+                    //System.out.println(j);
 
                     turns[i][a] = j;
                     sellTime[i][a] = peaks[i][j];
                     a++;
                 }
             }
-            System.out.println("NEW STOCK");
+            //System.out.println("NEW STOCK");
         }
-        System.out.println(Arrays.deepToString(sellTime));
+        //System.out.println(Arrays.deepToString(sellTime));
     }
 
-    public static void ProfitMap(double[][] prices) {
+    public static double[][] profitMap;
 
+    public static void ProfitMap(double[][] prices) {
         closest(peaks);
 
         int next = 0;
 
-
-        double[][] profitMap = new double[prices.length][prices[0].length];
+        profitMap = new double[prices.length][prices[0].length];
         for (int i = 0; i < prices.length; i++) {
             double sell = sellTime[i][next];
             int turn = turns[i][next];
@@ -186,6 +120,32 @@ public class CreatePathForMultipleStocks {
         System.out.println(Arrays.deepToString(profitMap));
     }
 
+    public static void findPath(double[][] map) {
+
+        double profit = 0;
+        int turn;
+        for (int i = 0; i < map[0].length; i++) {
+            double maxValue = Integer.MIN_VALUE;
+            int maxIndex = 0;
+            for (int j = 0; j < map.length; j++) {
+                if (map[j][i] > maxValue) {
+                    maxValue = map[j][i];
+                    maxIndex = j;
+                }
+
+            }
+            profit += maxValue;
+            turn = i+1;
+            System.out.println("Stock: " + maxIndex + " On Turn: " + turn);
+        }
+        System.out.println(profit);
+    }
+
+    public static void run(double[][] stock) {
+        peak(stock);
+        ProfitMap(stock);
+        findPath(profitMap);
+    }
 
     public static void main(String[] args) {
 
@@ -214,15 +174,11 @@ public class CreatePathForMultipleStocks {
 
         double[][] a = {{1, 4, 1, 2, 3, 3, 7}, {2, 2, 2, 1, 7, 4, 5}};
 
-        double[] p = {1, 4, 1, 2, 3, 3, 7};
-
         System.out.println(records);
 
         //profit(a);
 
-        peak(a);
-
-        ProfitMap(a);
+        run(arr);
 
         //System.out.println(maxProfit(arr, 1));
     }
