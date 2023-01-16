@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class CreatePathForMultipleStocks {
 
     public static Map<String, List<Double>> records = new HashMap<>();
+    public static double[][] peaks;
 
     public static void csvToList() {
         try (CSVReader csvReader = new CSVReader(new FileReader("D:\\csvToBestRoutePrice\\src\\dane.csv"))) {
@@ -112,22 +113,73 @@ public class CreatePathForMultipleStocks {
     }
 
     public static void peak(double[][] p) {
-        double[][] peaks = new double[p.length][p[0].length];
+        peaks = new double[p.length][p[0].length];
         for (int i = 0; i < p.length; i++) {
             for (int j = 1; j < p[0].length-1; j++) {
+
                 if (p[i][j] > p[i][j+1] && p[i][j] > p[i][j-1]) {
                     peaks[i][j] = p[i][j];
-                    System.out.println(p[i][j]);
+                    //System.out.println(p[i][j]);
 
-                } else if (p[i][j+1] > p[i][j] & p[i][j+1] > p[i][j]) {
+                } else if (p[i][j+1] > p[i][j]) {
                     peaks[i][j+1] = p[i][j+1];
-                    System.out.println(p[i][j+1]);
+                    //System.out.println(p[i][j+1]);
+                }
+            }
+            //System.out.println("NEW STOCK");
+        }
+        System.out.println(Arrays.deepToString(peaks));
+    }
+
+    public static int[][] turns;
+    public static double[][] sellTime;
+
+    public static void closest(double[][] peaks) {
+
+        turns = new int[peaks.length][peaks[0].length];
+        sellTime = new double[peaks.length][peaks[0].length];
+        for (int i = 0; i < peaks.length; i++) {
+            int a = 0;
+            for (int j = 0; j < peaks[0].length; j++) {
+                if (peaks[i][j] != 0.0) {
+                    System.out.println(peaks[i][j]);
+                    System.out.println(j);
+
+                    turns[i][a] = j;
+                    sellTime[i][a] = peaks[i][j];
+                    a++;
                 }
             }
             System.out.println("NEW STOCK");
         }
-        System.out.println(Arrays.deepToString(peaks));
+        System.out.println(Arrays.deepToString(sellTime));
     }
+
+    public static void ProfitMap(double[][] prices) {
+
+        closest(peaks);
+
+        int next = 0;
+
+
+        double[][] profitMap = new double[prices.length][prices[0].length];
+        for (int i = 0; i < prices.length; i++) {
+            double sell = sellTime[i][next];
+            int turn = turns[i][next];
+            for (int j = 0; j < prices[0].length; j++) {
+                profitMap[i][j] = sell - prices[i][j];
+
+                if (j == turn) {
+                    next++;
+                    sell = sellTime[i][next];
+                    turn = turns[i][next];
+                }
+            }
+            next = 0;
+        }
+        System.out.println(Arrays.deepToString(profitMap));
+    }
+
 
     public static void main(String[] args) {
 
@@ -163,6 +215,8 @@ public class CreatePathForMultipleStocks {
         //profit(a);
 
         peak(a);
+
+        ProfitMap(a);
 
         //System.out.println(maxProfit(arr, 1));
     }
