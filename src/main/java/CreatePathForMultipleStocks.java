@@ -116,13 +116,19 @@ public class CreatePathForMultipleStocks {
         peaks = new double[p.length][p[0].length];
         for (int i = 0; i < p.length; i++) {
             for (int j = 1; j < p[0].length-1; j++) {
-
                 if (p[i][j] > p[i][j+1] && p[i][j] > p[i][j-1]) {
                     peaks[i][j] = p[i][j];
                     //System.out.println(p[i][j]);
 
                 } else if (p[i][j+1] > p[i][j]) {
-                    peaks[i][j+1] = p[i][j+1];
+
+                    if (j+2 != p[0].length) {
+                        if (p[i][j + 2] < p[i][j + 1])
+                            peaks[i][j + 1] = p[i][j + 1];
+                    } else {
+                        peaks[i][j + 1] = p[i][j + 1];
+                    }
+
                     //System.out.println(p[i][j+1]);
                 }
             }
