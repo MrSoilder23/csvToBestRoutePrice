@@ -68,7 +68,7 @@ public class CreatePathForMultipleStocks {
             }
             //System.out.println("NEW STOCK");
         }
-        //System.out.println(Arrays.deepToString(peaks));
+        System.out.println(Arrays.deepToString(peaks));
     }
 
     public static int[][] turns;
@@ -161,6 +161,7 @@ public class CreatePathForMultipleStocks {
 
 
         Collection<List<Double>> collection = records.values();
+        Collection<String> names = records.keySet();
 
         List<List<Double>> lists = new ArrayList<>(collection);
 
@@ -175,6 +176,12 @@ public class CreatePathForMultipleStocks {
         double[][] a = {{1, 4, 1, 2, 3, 3, 7}, {2, 2, 2, 1, 7, 4, 5}};
 
         System.out.println(records);
+        int nameNum = 0;
+        for (String k : names) {
+            System.out.println("Name: " + k + " Num: " + nameNum);
+
+            nameNum++;
+        }
 
         //profit(a);
 
